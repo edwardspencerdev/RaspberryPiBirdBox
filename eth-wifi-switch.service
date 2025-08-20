@@ -1,0 +1,12 @@
+[Unit]
+Description=Disable WiFi if Ethernet is present
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/eth-wifi-switch.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
