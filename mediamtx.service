@@ -1,0 +1,14 @@
+[Unit]
+Description=MediaMTX (RTSP / RTMP / WebRTC server)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mediamtx/mediamtx /usr/local/bin/mediamtx/mediamtx.yml
+Restart=on-failure
+RestartSec=5
+User=pi
+WorkingDirectory=/usr/local/bin/mediamtx
+
+[Install]
+WantedBy=multi-user.target
