@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-export function useWebRTCPlayer(streamUrl: string) {
+export function useWebRTCPlayer(streamUrl: string | Promise<string>) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [status, setStatus] = useState<"connecting" | "connected" | "failed">(
     "connecting"
@@ -36,7 +36,7 @@ export function useWebRTCPlayer(streamUrl: string) {
         await pc.setLocalDescription(offer);
 
         // Wait for ICE gathering to finish
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
           if (pc.iceGatheringState === "complete") resolve();
           else {
             pc.addEventListener("icegatheringstatechange", () => {
@@ -46,13 +46,15 @@ export function useWebRTCPlayer(streamUrl: string) {
         });
 
         console.log("Sending SDP offer…");
+        
+        streamUrl = await Promise.resolve(streamUrl);
 
         const res = await fetch(streamUrl, {
           method: "POST",
           headers: { "Content-Type": "application/sdp" },
           body: pc.localDescription!.sdp || "",
         });
-
+        
         const answerSdp = await res.text();
         console.log("Answer SDP:", answerSdp);
 
