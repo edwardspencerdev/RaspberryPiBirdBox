@@ -7,6 +7,10 @@ export async function GET(){
 }
 
 export async function PUT(request: NextRequest){
-    await new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET IrEnable = ?", request.nextUrl.searchParams.get('enable')); resolve();})});
-    return new Response()
+    await UpdateIrData(request.nextUrl.searchParams.get('irEnable'));
+    return new Response();
+}
+
+export async function UpdateIrData(enable: any) {
+    return new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET IrEnable = ?", enable); resolve();})});
 }

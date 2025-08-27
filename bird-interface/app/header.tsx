@@ -14,7 +14,7 @@ export function Header(){
             gap: "16px",
         }
     }>
-        <Link href="/">▶️ View</Link>
-        <Link href="/settings">⚙️ Settings</Link>
+        <Link href="/" style={{color:"white", textDecoration:"none"}}>▶️ View</Link>
+        <Link href="/settings" style={{ color:"white", textDecoration:"none"}}>⚙️ Settings</Link>
     </div>
 </>);}

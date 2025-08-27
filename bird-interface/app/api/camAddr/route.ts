@@ -11,6 +11,14 @@ export async function GET(){
 }
 
 export async function PUT(request: NextRequest){
-    await new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET CamAddr = ?", request.nextUrl.searchParams.get('addr')); resolve();})});
+    await UpdateAddressData(request.nextUrl.searchParams.get('addr'));
     return new Response()
+}
+
+export async function UpdateAddressData(addr: any) {
+    return new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET CamAddr = ?", addr); resolve();})});
+}
+
+export async function IsLocalAddress() {
+    return await new Promise<string | undefined>(async (resolve) => {const db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT CamAddr FROM Configuration", (err, rows) =>{resolve((rows as {CamAddr? : string})?.CamAddr )})})}) == "local";
 }
