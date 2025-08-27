@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import sqlite3 from "sqlite3";
 
 export async function GET(){
-    var db = await new Promise<string | undefined>(async (resolve) => {var db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT CamAddr FROM Configuration", (err, rows) =>{resolve((rows as {CamAddr? : string})?.CamAddr )})})});
+    const db = await new Promise<string | undefined>(async (resolve) => {const db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT CamAddr FROM Configuration", (err, rows) =>{resolve((rows as {CamAddr? : string})?.CamAddr )})})});
     if (db == "local"){
         return new Response(getServerIp())
     }
@@ -11,6 +11,6 @@ export async function GET(){
 }
 
 export async function PUT(request: NextRequest){
-    await new Promise<void>(async (resolve) => {var db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET CamAddr = ?", request.nextUrl.searchParams.get('addr')); resolve();})});
+    await new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET CamAddr = ?", request.nextUrl.searchParams.get('addr')); resolve();})});
     return new Response()
 }
