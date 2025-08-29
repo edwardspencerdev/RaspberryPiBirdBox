@@ -1,0 +1,44 @@
+.formContainer{
+    display: grid;
+    grid-template-areas:
+        "localLabel localInput"
+        "addrLabel addrInput"
+        "portLabel portInput"
+        "submitButton submitButton";
+    grid-template-columns: 1fr 1fr;
+    padding: 5px;
+    padding-top: 15px;
+    gap: 5px;
+}
+
+.formContainer > label.useLocal{
+    grid-area: localLabel;
+}
+
+.formContainer > input.useLocal{
+    grid-area: localInput;
+    margin-right: auto;
+    margin-left: 0%;
+}
+
+.formContainer > label.addr{
+    grid-area: addrLabel;
+}
+
+.formContainer > input.addr{
+    grid-area: addrInput;
+}
+
+.formContainer > label.port{
+    grid-area: portLabel;
+}
+
+.formContainer > input.port{
+    grid-area: portInput;
+}
+
+.formContainer > button{
+    grid-area: submitButton;
+    padding: 5px;
+    margin-top: 10px;
+}

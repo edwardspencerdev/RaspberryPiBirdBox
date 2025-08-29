@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { UpdateAddressData} from "../camAddr/route";
 import { UpdatePortData} from "../camPort/route";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function GET(request: NextRequest) {
     if (request.nextUrl.searchParams.get('useLocal')){
@@ -12,5 +12,5 @@ export async function GET(request: NextRequest) {
         await UpdateAddressData(request.nextUrl.searchParams.get('addr'));
     }
     await UpdatePortData(request.nextUrl.searchParams.get('port'));
-    redirect('/settings');
+    redirect('/settings?saved=yes', RedirectType.replace);
 }

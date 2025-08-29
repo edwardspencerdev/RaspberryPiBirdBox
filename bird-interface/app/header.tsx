@@ -8,13 +8,13 @@ export function Header(){
             justifyContent: "flex-start",
             alignItems: "center",
             height: "60px",       // fixed height
-            backgroundColor: "rgba(38, 163, 80, 1)",
+            backgroundColor: "rgba(168, 228, 112, 1)",
             color: "white",
             padding: "0 16px",
             gap: "16px",
         }
     }>
-        <Link href="/" style={{color:"white", textDecoration:"none"}}>▶️ View</Link>
-        <Link href="/settings" style={{ color:"white", textDecoration:"none"}}>⚙️ Settings</Link>
+        <Link href="/" style={{color:"black", textDecoration:"none"}}>▶️ View</Link>
+        <Link href="/settings" style={{ color:"black", textDecoration:"none"}}>⚙️ Settings</Link>
     </div>
 </>);}
