@@ -1,7 +1,6 @@
 'use server'
 import { NextRequest, NextResponse } from "next/server";
-import { UpdateAddressData} from "../camAddr/route";
-import { UpdatePortData} from "../camPort/route";
+import { UpdateAddressData, UpdatePortData } from "@/app/util/configUtil";
 import { redirect, RedirectType } from "next/navigation";
 
 export async function GET(request: NextRequest) {

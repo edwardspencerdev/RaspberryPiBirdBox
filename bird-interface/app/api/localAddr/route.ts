@@ -1,5 +1,5 @@
-import { getServerIp } from "@/app/util/ipAddrs";
+import { GetServerIp } from "@/app/util/ipAddrs";
 
 export async function GET(){
-    return new Response(getServerIp());
+    return new Response(GetServerIp());
 }

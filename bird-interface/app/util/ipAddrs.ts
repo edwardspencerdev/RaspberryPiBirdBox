@@ -1,6 +1,6 @@
 import os from "os"
 
-export function getServerIp(): string | null {
+export function GetServerIp(): string | null {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
     for (const net of interfaces[name] || []) {
