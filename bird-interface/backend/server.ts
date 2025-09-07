@@ -2,6 +2,7 @@ import express  from "express";
 import path from "path";
 import apiRouter from "./apiRouter.ts"
 
+
 const server = express();
 const port = 3000;
 

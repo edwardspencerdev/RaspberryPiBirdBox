@@ -33,6 +33,7 @@ apiRouter.get("/localAddr", async (req, res) => {
 });
 
 apiRouter.get("/restoreDefaults", async (req, res) => {
+    await new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("DELETE FROM Configuration"); await db.run("INSERT INTO Configuration SELECT * FROM DefaultConfiguration"); resolve();})});
     res.sendStatus(200);
 });
 
