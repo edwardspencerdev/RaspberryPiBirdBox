@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router";
 
 export function Header(){
     return (<>
@@ -14,7 +14,7 @@ export function Header(){
             gap: "16px",
         }
     }>
-        <Link href="/" style={{color:"black", textDecoration:"none"}}>▶️ View</Link>
-        <Link href="/settings" style={{ color:"black", textDecoration:"none"}}>⚙️ Settings</Link>
+        <Link to="/" style={{color:"black", textDecoration:"none"}}>▶️ View</Link>
+        <Link to="/settings" style={{ color:"black", textDecoration:"none"}}>⚙️ Settings</Link>
     </div>
 </>);}

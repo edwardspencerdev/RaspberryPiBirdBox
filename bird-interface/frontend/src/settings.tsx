@@ -1,17 +1,14 @@
 'use client'
-import { Header } from "../header";
-import Form from 'next/form';
+import { Header } from "./header";
+import { useSearchParams } from "react-router";
+import type { Dispatch, RefObject, SetStateAction} from "react"
+import { useEffect, useRef, useState } from "react";
+
 import "./settingsGrid.css"
-import { usePathname, useSearchParams } from "next/navigation";
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import path from "path";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function SettingsPage(){
     const searchParams = useSearchParams();
-    const router = useRouter()
-    const pathname = usePathname();
+    //const pathname = useLocation().pathname;
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const camAddrRef = useRef<HTMLInputElement | null>(null);
@@ -38,7 +35,7 @@ export default function SettingsPage(){
         });
         const portPromise = fetch("/api/camPort").then((res) => res.text()).then((text) => {if (camPortRef.current){camPortRef.current.value = text;}});
         
-        const loadedPromise = new Promise<void>(async (resolve) => {
+        new Promise<void>(async (resolve) => {
             await localCamPromise
             await localAddrPromise;
             await addrPromise;
@@ -48,16 +45,16 @@ export default function SettingsPage(){
         });
     }, [loaded]);
     useEffect(() => {
-        if (searchParams.has('saved')){
-            setIsSaved(searchParams.get('saved') == "yes");
+        if (searchParams[0].has('saved')){
+            setIsSaved(searchParams[0].get('saved') == "yes");
             setIsSaving(false);
             setLoaded(false);
+            searchParams[1](new URLSearchParams())
         }
-        router.replace(pathname)
     }, [searchParams])
     return <>
         <Header/>
-        <Form action={(formData) => SendForm(formData, router, setIsSaving)} className="formContainer">
+        <form action={(formData) => SendForm(formData, setIsSaving)} className="formContainer">
             <label className="useLocal" htmlFor="useLocal">Use Local IP Address For Camera: </label>
             <input className="useLocal" ref={localCamRef} onChange={() => OnLocalCheck(localCamRef, camAddrRef, camAddrVal || "", localAddrVal || "", setIsSaved, loaded)} name="useLocal" type="checkbox" defaultChecked={false}/>
             <label className="addr" htmlFor="addr">Camera IP Address: </label>
@@ -65,13 +62,13 @@ export default function SettingsPage(){
             <label className="port" htmlFor="port">Camera WebRTC Port: </label>
             <input className="port" name="port" type="number" defaultValue="0" ref={camPortRef} onChange={() => RemoveSavedOnClick(setIsSaved, loaded)}/>
             <button disabled={!loaded || isSaving}>{(!loaded || isSaving) ? "Loading Please Wait" : "Save Changes"}</button>
-        </Form>
+        </form>
         <div className="saveContainer">
             <div className="textContainer">
                 <p className="savedText" hidden={!isSaved} style={{color:"green", margin:"0px"}}>✅ Configuration saved</p>
             </div>
             <button className="undoButton" onClick={() => {setIsSaved(false); setLoaded(false)}}>Undo Changes</button>
-            <button className="restoreButton" onClick={() => fetch("/api/restoreDefaults").then((res) => {setIsSaved(false); setLoaded(false)})}>Restore Defaults</button>
+            <button className="restoreButton" onClick={() => fetch("/api/restoreDefaults").then((_res) => {setIsSaved(false); setLoaded(false)})}>Restore Defaults</button>
         </div>
     </>
 }
@@ -96,7 +93,9 @@ function RemoveSavedOnClick(saveSetter : Dispatch<SetStateAction<boolean>>, load
     saveSetter(false);
 }
 
-function SendForm(formData : FormData, router : AppRouterInstance, setIsSaving : Dispatch<SetStateAction<boolean>>){
+
+function SendForm(formData : FormData, setIsSaving : Dispatch<SetStateAction<boolean>>){
     setIsSaving(true);
-    router.replace("/api/updateConfiguration?" + new URLSearchParams(formData as any).toString())
+    console.log(formData)
+    window.location.href = ("/api/updateConfiguration?" + new URLSearchParams(formData as any).toString())
 }
