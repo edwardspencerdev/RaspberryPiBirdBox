@@ -15,6 +15,8 @@ export default function SettingsPage(){
     const [camAddrVal, setCamAddr] = useState<string | null>(null);
     const camPortRef = useRef<HTMLInputElement | null>(null);
     const localCamRef = useRef<HTMLInputElement | null>(null);
+    const irEnableRef = useRef<HTMLInputElement | null>(null);
+    const irPinNumRef = useRef<HTMLInputElement | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [localAddrVal, setLocalAddr] = useState<string | null>(null)
     useEffect(() => {
@@ -34,12 +36,24 @@ export default function SettingsPage(){
             }
         });
         const portPromise = fetch("/api/camPort").then((res) => res.text()).then((text) => {if (camPortRef.current){camPortRef.current.value = text;}});
-        
+        const irEnablePromise = fetch("/api/irEnable").then((res) => res.text()).then((text) => text == "1");
+	const irPinNumPromise = fetch("/api/irPinNum").then((res) => res.text())
+	.then(async (pinNum) => {
+	    const irIsEnable = await irEnablePromise;
+	    if(irEnableRef.current){
+		irEnableRef.current.checked = irIsEnable;
+	    }
+	    if(irPinNumRef.current){
+		irPinNumRef.current.value = pinNum;
+	    }
+	});
         new Promise<void>(async (resolve) => {
             await localCamPromise
             await localAddrPromise;
             await addrPromise;
             await portPromise;
+	    await irEnablePromise;
+	    await irPinNumPromise;
             setLoaded(true);
             resolve()
         });
@@ -61,6 +75,10 @@ export default function SettingsPage(){
             <input className="addr" name="addr" type="text" defaultValue="0.0.0.0" ref={camAddrRef} onChange={() => RemoveSavedOnClick(setIsSaved, loaded)}/>
             <label className="port" htmlFor="port">Camera WebRTC Port: </label>
             <input className="port" name="port" type="number" defaultValue="0" ref={camPortRef} onChange={() => RemoveSavedOnClick(setIsSaved, loaded)}/>
+	    <label className="irEnable" htmlFor="irEnable">IR Enable: </label>
+	    <input className="irEnable" ref={irEnableRef} name="irEnable" type="checkbox" defaultChecked={false} onChange={() => RemoveSavedOnClick(setIsSaved, loaded)}/>
+	    <label className="irPinNum" htmlFor="irPinNum">IR Pin Number: </label>
+	    <input className="irPinNum" name="irPinNum" type="number" defaultValue="0" ref={irPinNumRef} onChange={() => RemoveSavedOnClick(setIsSaved, loaded)}/>
             <button disabled={!loaded || isSaving}>{(!loaded || isSaving) ? "Loading Please Wait" : "Save Changes"}</button>
         </form>
         <div className="saveContainer">

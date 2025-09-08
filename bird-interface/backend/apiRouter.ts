@@ -1,6 +1,6 @@
 import { Router } from "express";
 import sqlite3 from "sqlite3";
-import { IsLocalAddress, UpdateAddressData, UpdatePortData } from "./util/configUtil.ts";
+import { IsLocalAddress, UpdateAddressData, UpdatePortData, UpdateIrEnableData, UpdateIrPinNumData } from "./util/configUtil.ts";
 import { GetServerIp } from "./util/ipAddrs.ts";
 
 
@@ -28,6 +28,11 @@ apiRouter.get("/irEnable", async (req, res) => {
     res.send(db);
 });
 
+apiRouter.get("/irPinNum", async (req, res) => {
+    const db = await new Promise<string | undefined>(async (resolve) => {const db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT IrPinNum FROM Configuration", (err, rows) =>{resolve((rows as {IrPinNum? : string})?.IrPinNum )})})});
+    res.send(db);
+});
+
 apiRouter.get("/localAddr", async (req, res) => {
     res.send(GetServerIp());
 });
@@ -39,13 +44,15 @@ apiRouter.get("/restoreDefaults", async (req, res) => {
 
 apiRouter.get("/updateConfiguration", async (req, res) => {
     if (req.query.useLocal == "on"){
-            await UpdateAddressData('local');
-        }
-        else {
-            await UpdateAddressData(req.query.addr);
-        }
-        await UpdatePortData(req.query.port);
-        res.redirect('/settings?saved=yes');
+    	await UpdateAddressData('local');
+    }
+    else {
+    	await UpdateAddressData(req.query.addr);
+    }
+    await UpdatePortData(req.query.port);
+    await UpdateIrEnableData(req.query.irEnable == "on" ? true : false);
+    await UpdateIrPinNumData(req.query.irPinNum);
+    res.redirect('/settings?saved=yes');
     
 });
 

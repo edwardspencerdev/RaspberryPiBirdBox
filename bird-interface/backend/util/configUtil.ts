@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-export async function UpdateIrData(enable: any) {
+export async function UpdateIrEnableData(enable: any) {
     return new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET IrEnable = ?", enable); resolve();})});
 }
 
@@ -10,6 +10,10 @@ export async function UpdatePortData(port: any) {
 
 export async function UpdateAddressData(addr: any) {
     return new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET CamAddr = ?", addr); resolve();})});
+}
+
+export async function UpdateIrPinNumData(pinNum: any) {
+    return new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("UPDATE Configuration SET IrPinNum = ?", pinNum); resolve();})});
 }
 
 export async function IsLocalAddress() {

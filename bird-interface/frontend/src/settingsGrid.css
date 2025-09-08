@@ -4,6 +4,8 @@
         "localLabel localInput"
         "addrLabel addrInput"
         "portLabel portInput"
+	"irEnableLabel irEnableInput"
+	"irPinLabel irPinInput" 
         "submitButton submitButton";
     grid-template-columns: 1fr 1fr;
     padding: 5px;
@@ -36,6 +38,24 @@
 
 .formContainer > input.port{
     grid-area: portInput;
+}
+
+.formContainer > label.irEnable{
+    grid-area: irEnableLabel;
+}
+
+.formContainer > input.irEnable{
+    grid-area: irEnableInput;
+    margin-right: auto;
+    margin-left: 0%;
+}
+
+.formContainer > label.irPinNum{
+    grid-area: irPinLabel;
+}
+
+.formContainer > input.irPinNum{
+    grid-area: irPinInput;
 }
 
 .formContainer > button{
