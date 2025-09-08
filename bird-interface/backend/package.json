@@ -9,6 +9,8 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@iiot2k/gpiox": "^3.0.5",
+    "exit-hook": "^4.0.0",
     "express": "^5.1.0",
     "sqlite3": "^5.1.7"
   },

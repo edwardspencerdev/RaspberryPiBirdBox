@@ -33,6 +33,7 @@ export default function SettingsPage(){
             }
             if(camAddrRef.current){
                 camAddrRef.current.value = FormatIfLocal(newLocal, newAddr, newLocalAddr);
+		camAddrRef.current.disabled = newLocal;
             }
         });
         const portPromise = fetch("/api/camPort").then((res) => res.text()).then((text) => {if (camPortRef.current){camPortRef.current.value = text;}});

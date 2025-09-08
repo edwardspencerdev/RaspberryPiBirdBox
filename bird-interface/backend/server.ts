@@ -1,7 +1,12 @@
 import express  from "express";
 import path from "path";
+import exitHook from "exit-hook";
 import apiRouter from "./apiRouter.ts"
+import { UpdateGpioState, DeinitOld } from "./gpioControls.ts"
+import {GetServerIp} from "./ipAddrs.ts";
 
+await UpdateGpioState();
+exitHook(signal => {DeinitOld();});
 
 const server = express();
 const port = 3000;
@@ -20,5 +25,5 @@ server.get("*splat", (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log("Camera Web Server Avaliable at http://" + GetServerIp() + ":" + port + "/");
 });

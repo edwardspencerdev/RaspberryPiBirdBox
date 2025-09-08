@@ -1,8 +1,8 @@
 import { Router } from "express";
 import sqlite3 from "sqlite3";
-import { IsLocalAddress, UpdateAddressData, UpdatePortData, UpdateIrEnableData, UpdateIrPinNumData } from "./util/configUtil.ts";
-import { GetServerIp } from "./util/ipAddrs.ts";
-
+import { IsLocalAddress, UpdateAddressData, UpdatePortData, UpdateIrEnableData, UpdateIrPinNumData, GetIrEnableData, GetIrPinNumData } from "./configUtil.ts";
+import { GetServerIp } from "./ipAddrs.ts";
+import {UpdateGpioState} from "./gpioControls.ts"
 
 const apiRouter = Router(); 
 
@@ -24,12 +24,12 @@ apiRouter.get("/camPort", async (req, res) => {
 });
 
 apiRouter.get("/irEnable", async (req, res) => {
-    const db = await new Promise<string | undefined>(async (resolve) => {const db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT IrEnable FROM Configuration", (err, rows) =>{resolve((rows as {IrEnable? : string})?.IrEnable )})})});
+    const db = await GetIrEnableData();
     res.send(db);
 });
 
 apiRouter.get("/irPinNum", async (req, res) => {
-    const db = await new Promise<string | undefined>(async (resolve) => {const db = await new sqlite3.Database("./config.db", (err) => {db.get("SELECT IrPinNum FROM Configuration", (err, rows) =>{resolve((rows as {IrPinNum? : string})?.IrPinNum )})})});
+    const db = await GetIrPinNumData();
     res.send(db);
 });
 
@@ -39,6 +39,7 @@ apiRouter.get("/localAddr", async (req, res) => {
 
 apiRouter.get("/restoreDefaults", async (req, res) => {
     await new Promise<void>(async (resolve) => {const db = await new sqlite3.Database("./config.db", async (err) => {await db.run("DELETE FROM Configuration"); await db.run("INSERT INTO Configuration SELECT * FROM DefaultConfiguration"); resolve();})});
+    UpdateGpioState();
     res.sendStatus(200);
 });
 
